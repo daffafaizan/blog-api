@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	postService    services.PostService       = services.New()
+	postService    services.PostService       = services.NewPostService()
 	postController controllers.PostController = controllers.New(postService)
 )
 

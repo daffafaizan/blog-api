@@ -16,7 +16,7 @@ type postService struct {
 	posts []models.Post
 }
 
-func New() PostService {
+func NewPostService() PostService {
 	return &postService{}
 }
 
