@@ -29,9 +29,9 @@ func (service *postService) GetAllPosts() []entity.Post {
 	return service.posts
 }
 
-func (service *postService) GetPostById(postId string) (*entity.Post, error) {
+func (service *postService) GetPostById(id string) (*entity.Post, error) {
 	for i, p := range service.posts {
-		if p.PostID == postId {
+		if p.ID == id {
 			return &service.posts[i], nil
 		}
 	}
