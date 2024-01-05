@@ -1,8 +1,9 @@
 package entity
 
 type Post struct {
+	PostID  string `json:"postid"`
 	Title   string `json:"title"`
 	Content string `json:"content"`
-	Date    string `json:"date"`
+	Time    string `json:"time"`
 	Author  Author `json:"author"`
 }
