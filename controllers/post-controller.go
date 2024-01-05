@@ -1,15 +1,15 @@
 package controllers
 
 import (
-	"github.com/daffafaizan/blog-api/entity"
+	"github.com/daffafaizan/blog-api/models"
 	"github.com/daffafaizan/blog-api/services"
 	"github.com/gin-gonic/gin"
 )
 
 type PostController interface {
 	CreatePost(c *gin.Context) error
-	GetAllPosts() []entity.Post
-	GetPostById(c *gin.Context) (*entity.Post, error)
+	GetAllPosts() []models.Post
+	GetPostById(c *gin.Context) (*models.Post, error)
 }
 
 type postController struct {
@@ -23,7 +23,7 @@ func New(service services.PostService) PostController {
 }
 
 func (controller postController) CreatePost(c *gin.Context) error {
-	var post entity.Post
+	var post models.Post
 	err := c.ShouldBindJSON(&post)
 	if err != nil {
 		return err
@@ -32,11 +32,11 @@ func (controller postController) CreatePost(c *gin.Context) error {
 	return nil
 }
 
-func (controller postController) GetAllPosts() []entity.Post {
+func (controller postController) GetAllPosts() []models.Post {
 	return controller.service.GetAllPosts()
 }
 
-func (controller postController) GetPostById(c *gin.Context) (*entity.Post, error) {
+func (controller postController) GetPostById(c *gin.Context) (*models.Post, error) {
 	id := c.Param("id")
 	return controller.service.GetPostById(id)
 }
