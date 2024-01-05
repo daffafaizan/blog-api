@@ -22,10 +22,11 @@ func NewCommentController(service services.CommentService) CommentController {
 
 func (controller commentController) CreateComment(c *gin.Context) error {
 	var comment models.Comment
+	postId := c.Param("id")
 	err := c.ShouldBindJSON(&comment)
 	if err != nil {
 		return err
 	}
-	controller.service.CreateComment(comment)
+	controller.service.CreateComment(comment, postId)
 	return nil
 }

@@ -1,20 +1,25 @@
 package services
 
-import "github.com/daffafaizan/blog-api/models"
+import (
+	"github.com/daffafaizan/blog-api/models"
+)
 
 type CommentService interface {
-	CreateComment(models.Comment) models.Comment
+	CreateComment(models.Comment, string) models.Comment
 }
 
 type commentService struct {
-	comments []models.Comment
+	postService PostService
 }
 
-func NewCommentService() CommentService {
-	return &commentService{}
+func NewCommentService(postService PostService) CommentService {
+	return &commentService{
+		postService: postService,
+	}
 }
 
-func (service *commentService) CreateComment(comment models.Comment) models.Comment {
-	service.comments = append(service.comments, comment)
+func (service *commentService) CreateComment(comment models.Comment, postId string) models.Comment {
+	post := service.postService.GetPostById(postId)
+	post.Comments = append(post.Comments, comment)
 	return comment
 }

@@ -11,7 +11,7 @@ import (
 var (
 	postService        services.PostService          = services.NewPostService()
 	postController     controllers.PostController    = controllers.NewPostController(postService)
-	commentService     services.CommentService       = services.NewCommentService()
+	commentService     services.CommentService       = services.NewCommentService(postService)
 	commenttController controllers.CommentController = controllers.NewCommentController(commentService)
 )
 
