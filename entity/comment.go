@@ -1,8 +1,7 @@
 package entity
 
-type Post struct {
-	Title   string `json:"title"`
+type Comment struct {
 	Content string `json:"content"`
-	Date    string `json:"date"`
 	Author  Author `json:"author"`
+	Post    Post   `json:"post"`
 }
