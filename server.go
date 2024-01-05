@@ -10,7 +10,7 @@ import (
 
 var (
 	postService    services.PostService       = services.NewPostService()
-	postController controllers.PostController = controllers.New(postService)
+	postController controllers.PostController = controllers.NewPostController(postService)
 )
 
 func main() {
