@@ -1,9 +1,9 @@
 package entity
 
 type Comment struct {
-	ID      string `json:"id"`
-	Content string `json:"content"`
-	Time    string `json:"time"`
-	Author  Author `json:"author"`
-	Post    Post   `json:"post"`
+	ID      string `json:"id" binding:"required"`
+	Content string `json:"content" binding:"required,max=300"`
+	Time    string `json:"time" binding:"required"`
+	Author  Author `json:"author" binding:"required"`
+	Post    Post   `json:"post" binding:"required"`
 }
