@@ -9,8 +9,10 @@ import (
 )
 
 var (
-	postService    services.PostService       = services.NewPostService()
-	postController controllers.PostController = controllers.NewPostController(postService)
+	postService        services.PostService          = services.NewPostService()
+	postController     controllers.PostController    = controllers.NewPostController(postService)
+	commentService     services.CommentService       = services.NewCommentService()
+	commenttController controllers.CommentController = controllers.NewCommentController(commentService)
 )
 
 func main() {
@@ -35,6 +37,14 @@ func main() {
 				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			} else {
 				c.JSON(http.StatusOK, post)
+			}
+		})
+		apiRoutes.POST("/posts/:id/comment", func(c *gin.Context) {
+			err := commenttController.CreateComment(c)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			} else {
+				c.JSON(http.StatusOK, gin.H{"message": "Comment successfully created!"})
 			}
 		})
 	}
