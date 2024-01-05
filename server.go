@@ -29,6 +29,14 @@ func main() {
 				c.JSON(http.StatusOK, gin.H{"message": "Post successfully created!"})
 			}
 		})
+		apiRoutes.GET("/posts/:id", func(c *gin.Context) {
+			post, err := postController.GetPostById(c)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			} else {
+				c.JSON(http.StatusOK, post)
+			}
+		})
 	}
 
 	server.Run("localhost:8080")
