@@ -9,5 +9,5 @@ type Post struct {
 	Title   string `json:"title"`
 	Content string `json:"content"`
 	Date    string `json:"date"`
-	Author  string `json:"author"`
+	Author  Author `json:"author"`
 }
