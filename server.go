@@ -1,7 +1,16 @@
 package main
 
 import (
+	"net/http"
+
+	"github.com/daffafaizan/blog-api/controllers"
+	"github.com/daffafaizan/blog-api/services"
 	"github.com/gin-gonic/gin"
+)
+
+var (
+	postService    services.PostService       = services.New()
+	postController controllers.PostController = controllers.New(postService)
 )
 
 func main() {
@@ -10,6 +19,15 @@ func main() {
 	apiRoutes := server.Group("/api")
 	{
 		apiRoutes.GET("/posts", func(c *gin.Context) {
+			c.JSON(200, postController.GetAllPosts())
+		})
+		apiRoutes.POST("/posts", func(c *gin.Context) {
+			err := postController.CreatePost(c)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			} else {
+				c.JSON(http.StatusOK, gin.H{"message": "Post successfully created!"})
+			}
 		})
 	}
 
