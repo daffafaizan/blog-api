@@ -32,11 +32,11 @@ func main() {
 			}
 		})
 		apiRoutes.GET("/posts/:id", func(c *gin.Context) {
-			post, err := postController.GetPostById(c)
-			if err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			} else {
+			post := postController.GetPostById(c)
+			if post != nil {
 				c.JSON(http.StatusOK, post)
+			} else {
+				c.JSON(http.StatusNotFound, gin.H{"error": "Post not found!"})
 			}
 		})
 		apiRoutes.POST("/posts/:id/comment", func(c *gin.Context) {

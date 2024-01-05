@@ -1,15 +1,13 @@
 package services
 
 import (
-	"errors"
-
 	"github.com/daffafaizan/blog-api/models"
 )
 
 type PostService interface {
 	CreatePost(models.Post) models.Post
 	GetAllPosts() []models.Post
-	GetPostById(string) (*models.Post, error)
+	GetPostById(string) *models.Post
 }
 
 type postService struct {
@@ -29,11 +27,11 @@ func (service *postService) GetAllPosts() []models.Post {
 	return service.posts
 }
 
-func (service *postService) GetPostById(id string) (*models.Post, error) {
+func (service *postService) GetPostById(id string) *models.Post {
 	for i, p := range service.posts {
 		if p.ID == id {
-			return &service.posts[i], nil
+			return &service.posts[i]
 		}
 	}
-	return nil, errors.New("post not found")
+	return nil
 }

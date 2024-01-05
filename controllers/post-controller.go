@@ -9,7 +9,7 @@ import (
 type PostController interface {
 	CreatePost(c *gin.Context) error
 	GetAllPosts() []models.Post
-	GetPostById(c *gin.Context) (*models.Post, error)
+	GetPostById(c *gin.Context) *models.Post
 }
 
 type postController struct {
@@ -36,7 +36,7 @@ func (controller postController) GetAllPosts() []models.Post {
 	return controller.service.GetAllPosts()
 }
 
-func (controller postController) GetPostById(c *gin.Context) (*models.Post, error) {
+func (controller postController) GetPostById(c *gin.Context) *models.Post {
 	id := c.Param("id")
 	return controller.service.GetPostById(id)
 }
