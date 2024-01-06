@@ -5,6 +5,7 @@ import (
 
 	"github.com/daffafaizan/blog-api/controllers"
 	"github.com/daffafaizan/blog-api/services"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,6 +18,7 @@ var (
 
 func main() {
 	server := gin.Default()
+	server.Use(cors.Default())
 
 	apiRoutes := server.Group("/api")
 	{
