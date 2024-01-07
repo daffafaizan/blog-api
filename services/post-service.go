@@ -4,13 +4,14 @@ import (
 	"context"
 
 	"github.com/daffafaizan/blog-api/models"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type PostService interface {
 	CreatePost(*models.Post) error
 	GetAllPosts() (*[]models.Post, error)
-	GetPostById(string) (*models.Post, error)
+	GetPostById(*string) (*models.Post, error)
 }
 
 type postService struct {
@@ -34,6 +35,9 @@ func (service *postService) GetAllPosts() (*[]models.Post, error) {
 	return nil, nil
 }
 
-func (service *postService) GetPostById(id string) (*models.Post, error) {
-	return nil, nil
+func (service *postService) GetPostById(id *string) (*models.Post, error) {
+	var post *models.Post
+	query := bson.D{bson.E{Key: "id", Value: id}}
+	err := service.postCollection.FindOne(service.c, query).Decode(&post)
+	return post, err
 }
