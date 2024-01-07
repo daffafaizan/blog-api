@@ -47,7 +47,7 @@ func init() {
 	commentCollection = mongoClient.Database("blogdb").Collection("comments")
 
 	postService = services.NewPostService(postCollection, commentCollection, c)
-	commentService = services.NewCommentService(postService, commentCollection, c)
+	commentService = services.NewCommentService(postService, commentCollection, postCollection, c)
 	postController = controllers.NewPostController(postService)
 	commentController = controllers.NewCommentController(commentService)
 
@@ -63,9 +63,10 @@ func main() {
 	{
 		apiRoutes.GET("/posts", postController.GetAllPosts)
 		apiRoutes.POST("/posts", postController.CreatePost)
-		apiRoutes.GET("/posts/:id", postController.GetPostById)
-		apiRoutes.DELETE("/posts/:id", postController.DeletePostById)
-		apiRoutes.POST("/posts/:id/comment", commentController.CreateComment)
+		apiRoutes.GET("/posts/:postId", postController.GetPostById)
+		apiRoutes.DELETE("/posts/:postId", postController.DeletePostById)
+		apiRoutes.POST("/posts/:postId/comment", commentController.CreateComment)
+		apiRoutes.DELETE("/posts/:postId/comment/:commentId", commentController.DeleteCommentById)
 	}
 
 	log.Fatal(server.Run(os.Getenv("SERVER")))

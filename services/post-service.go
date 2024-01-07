@@ -106,10 +106,7 @@ func (service *postService) DeletePostById(postId *string) error {
 	}
 
 	postFilter := bson.D{bson.E{Key: "_id", Value: objectId}}
-	postResult, err := service.postCollection.DeleteOne(service.c, postFilter)
-	if err != nil {
-		return err
-	}
+	postResult, _ := service.postCollection.DeleteOne(service.c, postFilter)
 
 	if postResult.DeletedCount != 1 {
 		return errors.New("no matched post found for delete")
