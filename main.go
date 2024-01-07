@@ -64,5 +64,5 @@ func main() {
 		apiRoutes.POST("/posts/:id/comment", commentController.CreateComment)
 	}
 
-	log.Fatal(server.Run(os.Getenv("PORT")))
+	log.Fatal(server.Run(os.Getenv("SERVER")))
 }
