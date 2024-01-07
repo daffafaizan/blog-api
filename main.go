@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"os"
 
 	"github.com/daffafaizan/blog-api/controllers"
 	"github.com/daffafaizan/blog-api/initializers"
@@ -31,7 +32,7 @@ func init() {
 	initializers.LoadEnv()
 	c = context.TODO()
 
-	mongoConn := options.Client().ApplyURI("mongodb://localhost:27017")
+	mongoConn := options.Client().ApplyURI(os.Getenv("MONGODB"))
 	mongoClient, err := mongo.Connect(c, mongoConn)
 	if err != nil {
 		log.Fatal(err)
@@ -63,5 +64,5 @@ func main() {
 		apiRoutes.POST("/posts/:id/comment", commentController.CreateComment)
 	}
 
-	log.Fatal(server.Run())
+	log.Fatal(server.Run(os.Getenv("PORT")))
 }
