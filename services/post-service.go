@@ -33,6 +33,7 @@ func NewPostService(postCollection *mongo.Collection, commentCollection *mongo.C
 }
 
 func (service *postService) CreatePost(post *models.Post) error {
+	post.ID = primitive.NewObjectID()
 	_, err := service.postCollection.InsertOne(service.c, post)
 	return err
 }

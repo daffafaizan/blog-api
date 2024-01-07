@@ -7,7 +7,7 @@ type Post struct {
 	Content    string             `json:"content" bson:"content" binding:"required,max=1000"`
 	Date       string             `json:"date" bson:"date" binding:"required"`
 	Time       string             `json:"time" bson:"time" binding:"required"`
-	Comments   []Comment          `json:"comments" bson:"comments"`
 	PostAuthor Author             `json:"postAuthor" bson:"postAuthor" binding:"required"`
+	Comments   []Comment          `json:"comments" bson:"comments"`
 	ID         primitive.ObjectID `json:"_id" bson:"_id"`
 }

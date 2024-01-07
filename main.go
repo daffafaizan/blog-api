@@ -65,8 +65,8 @@ func main() {
 		apiRoutes.POST("/posts", postController.CreatePost)
 		apiRoutes.GET("/posts/:postId", postController.GetPostById)
 		apiRoutes.DELETE("/posts/:postId", postController.DeletePostById)
-		apiRoutes.POST("/posts/:postId/comment", commentController.CreateComment)
-		apiRoutes.DELETE("/posts/:postId/comment/:commentId", commentController.DeleteCommentById)
+		apiRoutes.POST("/posts/:postId/comments", commentController.CreateComment)
+		apiRoutes.DELETE("/posts/:postId/comments/:commentId", commentController.DeleteCommentById)
 	}
 
 	log.Fatal(server.Run(os.Getenv("SERVER")))

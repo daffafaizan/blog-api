@@ -44,6 +44,7 @@ func (service *commentService) GetCommentById(commentId *string) (*models.Commen
 }
 
 func (service *commentService) CreateComment(postId *string, comment *models.Comment) error {
+	comment.ID = primitive.NewObjectID()
 	_, err := service.commentCollection.InsertOne(service.c, comment)
 	if err != nil {
 		return err
