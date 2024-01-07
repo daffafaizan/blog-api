@@ -1,37 +1,35 @@
 package services
 
 import (
+	"context"
+
 	"github.com/daffafaizan/blog-api/models"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type PostService interface {
-	CreatePost(models.Post) models.Post
-	GetAllPosts() []models.Post
-	GetPostById(string) *models.Post
+	CreatePost(*models.Post) error
+	GetAllPosts() (*[]models.Post, error)
+	GetPostById(string) (*models.Post, error)
 }
 
 type postService struct {
-	posts []models.Post
+	postCollection *mongo.Collection
+	c              context.Context
 }
 
 func NewPostService() PostService {
 	return &postService{}
 }
 
-func (service *postService) CreatePost(post models.Post) models.Post {
-	service.posts = append(service.posts, post)
-	return post
-}
-
-func (service *postService) GetAllPosts() []models.Post {
-	return service.posts
-}
-
-func (service *postService) GetPostById(id string) *models.Post {
-	for i, p := range service.posts {
-		if p.ID == id {
-			return &service.posts[i]
-		}
-	}
+func (service *postService) CreatePost(post *models.Post) error {
 	return nil
+}
+
+func (service *postService) GetAllPosts() (*[]models.Post, error) {
+	return nil, nil
+}
+
+func (service *postService) GetPostById(id string) (*models.Post, error) {
+	return nil, nil
 }
