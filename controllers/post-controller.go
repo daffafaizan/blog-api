@@ -40,15 +40,20 @@ func (controller postController) CreatePost(c *gin.Context) {
 }
 
 func (controller postController) GetAllPosts(c *gin.Context) {
-	c.JSON(200, "")
-}
-
-func (controller postController) GetPostById(c *gin.Context) {
-	postId := c.Param("id")
-	user, err := controller.service.GetPostById(&postId)
+	posts, err := controller.service.GetAllPosts()
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, posts)
+}
+
+func (controller postController) GetPostById(c *gin.Context) {
+	postId := c.Param("id")
+	post, err := controller.service.GetPostById(&postId)
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, post)
 }
