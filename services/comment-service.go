@@ -6,6 +6,7 @@ import (
 
 	"github.com/daffafaizan/blog-api/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -28,17 +29,24 @@ func NewCommentService(postService PostService, postCollection *mongo.Collection
 }
 
 func (service *commentService) CreateComment(comment *models.Comment, postId *string) error {
+	objectId, err := primitive.ObjectIDFromHex(*postId)
+	if err != nil {
+		return err
+	}
+
 	post, err := service.postService.GetPostById(postId)
 	if err != nil {
 		return err
 	}
 	post.Comments = append(post.Comments, *comment)
-	filter := bson.D{bson.E{Key: "id", Value: postId}}
+
+	filter := bson.D{bson.E{Key: "_id", Value: objectId}}
 	update := bson.D{bson.E{Key: "$set", Value: bson.D{bson.E{Key: "comments", Value: post.Comments}}}}
 	result, err := service.postCollection.UpdateOne(service.c, filter, update)
 	if err != nil {
 		return err
 	}
+
 	if result.MatchedCount != 1 {
 		return errors.New("no matched post found for update")
 	}

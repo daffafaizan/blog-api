@@ -6,6 +6,7 @@ import (
 
 	"github.com/daffafaizan/blog-api/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -59,7 +60,11 @@ func (service *postService) GetAllPosts() ([]*models.Post, error) {
 
 func (service *postService) GetPostById(id *string) (*models.Post, error) {
 	var post *models.Post
-	query := bson.D{bson.E{Key: "id", Value: id}}
-	err := service.postCollection.FindOne(service.c, query).Decode(&post)
+	objectId, err := primitive.ObjectIDFromHex(*id)
+	if err != nil {
+		return nil, err
+	}
+	filter := bson.D{bson.E{Key: "_id", Value: objectId}}
+	err = service.postCollection.FindOne(service.c, filter).Decode(&post)
 	return post, err
 }

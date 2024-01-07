@@ -1,7 +1,6 @@
 package models
 
 type Post struct {
-	ID         string    `json:"id" bson:"id" binding:"required"`
 	Title      string    `json:"title" bson:"title" binding:"required,max=60"`
 	Content    string    `json:"content" bson:"content" binding:"required,max=1000"`
 	Date       string    `json:"date" bson:"date" binding:"required"`
