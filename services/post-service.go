@@ -26,7 +26,8 @@ func NewPostService(postCollection *mongo.Collection, c context.Context) PostSer
 }
 
 func (service *postService) CreatePost(post *models.Post) error {
-	return nil
+	_, err := service.postCollection.InsertOne(service.c, post)
+	return err
 }
 
 func (service *postService) GetAllPosts() (*[]models.Post, error) {

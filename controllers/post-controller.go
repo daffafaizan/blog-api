@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"net/http"
+
+	"github.com/daffafaizan/blog-api/models"
 	"github.com/daffafaizan/blog-api/services"
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +25,16 @@ func NewPostController(service services.PostService) PostController {
 }
 
 func (controller postController) CreatePost(c *gin.Context) {
-	c.JSON(200, "")
+	var post models.Post
+	err := c.ShouldBindJSON(&post)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+	}
+	err = controller.service.CreatePost(&post)
+	if err != nil {
+		c.JSON(http.StatusBadGateway, err.Error())
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "success"})
 }
 
 func (controller postController) GetAllPosts(c *gin.Context) {
