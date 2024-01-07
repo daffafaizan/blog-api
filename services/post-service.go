@@ -15,17 +15,20 @@ type PostService interface {
 	CreateComment(*string, *models.Comment) error
 	GetAllPosts() ([]*models.Post, error)
 	GetPostById(*string) (*models.Post, error)
+	DeletePostById(*string) error
 }
 
 type postService struct {
-	postCollection *mongo.Collection
-	c              context.Context
+	postCollection    *mongo.Collection
+	commentCollection *mongo.Collection
+	c                 context.Context
 }
 
-func NewPostService(postCollection *mongo.Collection, c context.Context) PostService {
+func NewPostService(postCollection *mongo.Collection, commentCollection *mongo.Collection, c context.Context) PostService {
 	return &postService{
-		postCollection: postCollection,
-		c:              c,
+		postCollection:    postCollection,
+		commentCollection: commentCollection,
+		c:                 c,
 	}
 }
 
@@ -91,6 +94,31 @@ func (service *postService) CreateComment(postId *string, comment *models.Commen
 
 	if result.MatchedCount != 1 {
 		return errors.New("no matched post found for update")
+	}
+
+	return nil
+}
+
+func (service *postService) DeletePostById(postId *string) error {
+	objectId, err := primitive.ObjectIDFromHex(*postId)
+	if err != nil {
+		return err
+	}
+
+	postFilter := bson.D{bson.E{Key: "_id", Value: objectId}}
+	postResult, err := service.postCollection.DeleteOne(service.c, postFilter)
+	if err != nil {
+		return err
+	}
+
+	if postResult.DeletedCount != 1 {
+		return errors.New("no matched post found for delete")
+	}
+
+	commentFilter := bson.D{bson.E{Key: "postId", Value: postId}}
+	_, err = service.commentCollection.DeleteMany(service.c, commentFilter)
+	if err != nil {
+		return err
 	}
 
 	return nil

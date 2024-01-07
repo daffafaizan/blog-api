@@ -12,6 +12,7 @@ type PostController interface {
 	CreatePost(c *gin.Context)
 	GetAllPosts(c *gin.Context)
 	GetPostById(c *gin.Context)
+	DeletePostById(c *gin.Context)
 }
 
 type postController struct {
@@ -56,4 +57,14 @@ func (controller postController) GetPostById(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, post)
+}
+
+func (controller postController) DeletePostById(c *gin.Context) {
+	postId := c.Param("id")
+	err := controller.service.DeletePostById(&postId)
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "success"})
 }

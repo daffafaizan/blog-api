@@ -1,6 +1,7 @@
 package models
 
 type Comment struct {
+	PostId        string `json:"postId" bson:"postId" binding:"required"`
 	Content       string `json:"content" bson:"content" binding:"required,max=300"`
 	Date          string `json:"date" bson:"date" binding:"required"`
 	Time          string `json:"time" bson:"time" binding:"required"`
