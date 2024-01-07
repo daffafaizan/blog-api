@@ -18,8 +18,11 @@ type postService struct {
 	c              context.Context
 }
 
-func NewPostService() PostService {
-	return &postService{}
+func NewPostService(postCollection *mongo.Collection, c context.Context) PostService {
+	return &postService{
+		postCollection: postCollection,
+		c:              c,
+	}
 }
 
 func (service *postService) CreatePost(post *models.Post) error {
