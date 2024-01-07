@@ -74,7 +74,7 @@ func (service *postService) GetPostById(postId *string) (*models.Post, error) {
 }
 
 func (service *postService) CreateComment(postId *string, comment *models.Comment) error {
-	objectId, err := primitive.ObjectIDFromHex(*postId)
+	postObjectId, err := primitive.ObjectIDFromHex(*postId)
 	if err != nil {
 		return err
 	}
@@ -85,7 +85,7 @@ func (service *postService) CreateComment(postId *string, comment *models.Commen
 	}
 	post.Comments = append(post.Comments, *comment)
 
-	filter := bson.D{bson.E{Key: "_id", Value: objectId}}
+	filter := bson.D{bson.E{Key: "_id", Value: postObjectId}}
 	update := bson.D{bson.E{Key: "$set", Value: bson.D{bson.E{Key: "comments", Value: post.Comments}}}}
 	result, err := service.postCollection.UpdateOne(service.c, filter, update)
 	if err != nil {
@@ -100,19 +100,19 @@ func (service *postService) CreateComment(postId *string, comment *models.Commen
 }
 
 func (service *postService) DeletePostById(postId *string) error {
-	objectId, err := primitive.ObjectIDFromHex(*postId)
+	postObjectId, err := primitive.ObjectIDFromHex(*postId)
 	if err != nil {
 		return err
 	}
 
-	postFilter := bson.D{bson.E{Key: "_id", Value: objectId}}
+	postFilter := bson.D{bson.E{Key: "_id", Value: postObjectId}}
 	postResult, _ := service.postCollection.DeleteOne(service.c, postFilter)
 
 	if postResult.DeletedCount != 1 {
 		return errors.New("no matched post found for delete")
 	}
 
-	commentFilter := bson.D{bson.E{Key: "postId", Value: postId}}
+	commentFilter := bson.D{bson.E{Key: "postId", Value: postObjectId}}
 	_, err = service.commentCollection.DeleteMany(service.c, commentFilter)
 	if err != nil {
 		return err

@@ -1,9 +1,11 @@
 package models
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 type Comment struct {
-	PostId        string `json:"postId" bson:"postId" binding:"required"`
-	Content       string `json:"content" bson:"content" binding:"required,max=300"`
-	Date          string `json:"date" bson:"date" binding:"required"`
-	Time          string `json:"time" bson:"time" binding:"required"`
-	CommentAuthor Author `json:"commentAuthor" bson:"commentAuthor" binding:"required"`
+	Content       string             `json:"content" bson:"content" binding:"required,max=300"`
+	Date          string             `json:"date" bson:"date" binding:"required"`
+	Time          string             `json:"time" bson:"time" binding:"required"`
+	CommentAuthor Author             `json:"commentAuthor" bson:"commentAuthor" binding:"required"`
+	PostId        primitive.ObjectID `json:"postId" bson:"postId" binding:"required"`
 }
