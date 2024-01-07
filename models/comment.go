@@ -7,5 +7,6 @@ type Comment struct {
 	Date          string             `json:"date" bson:"date" binding:"required"`
 	Time          string             `json:"time" bson:"time" binding:"required"`
 	CommentAuthor Author             `json:"commentAuthor" bson:"commentAuthor" binding:"required"`
+	ID            primitive.ObjectID `json:"_id" bson:"_id"`
 	PostId        primitive.ObjectID `json:"postId" bson:"postId" binding:"required"`
 }
