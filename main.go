@@ -21,8 +21,9 @@ var (
 	postController    controllers.PostController
 	commentController controllers.CommentController
 
-	postCollection *mongo.Collection
-	mongoClient    *mongo.Client
+	postCollection    *mongo.Collection
+	commentCollection *mongo.Collection
+	mongoClient       *mongo.Client
 
 	c      context.Context
 	server *gin.Engine
@@ -42,9 +43,11 @@ func init() {
 		log.Fatal(err)
 	}
 
-	postCollection = mongoClient.Database("postsdb").Collection("posts")
+	postCollection = mongoClient.Database("blogdb").Collection("posts")
+	commentCollection = mongoClient.Database("blogdb").Collection("comments")
+
 	postService = services.NewPostService(postCollection, c)
-	commentService = services.NewCommentService(postService, postCollection, c)
+	commentService = services.NewCommentService(postService, commentCollection, c)
 	postController = controllers.NewPostController(postService)
 	commentController = controllers.NewCommentController(commentService)
 

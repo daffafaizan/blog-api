@@ -12,6 +12,7 @@ import (
 
 type PostService interface {
 	CreatePost(*models.Post) error
+	CreateComment(*string, *models.Comment) error
 	GetAllPosts() ([]*models.Post, error)
 	GetPostById(*string) (*models.Post, error)
 }
@@ -67,4 +68,30 @@ func (service *postService) GetPostById(id *string) (*models.Post, error) {
 	filter := bson.D{bson.E{Key: "_id", Value: objectId}}
 	err = service.postCollection.FindOne(service.c, filter).Decode(&post)
 	return post, err
+}
+
+func (service *postService) CreateComment(postId *string, comment *models.Comment) error {
+	objectId, err := primitive.ObjectIDFromHex(*postId)
+	if err != nil {
+		return err
+	}
+
+	post, err := service.GetPostById(postId)
+	if err != nil {
+		return err
+	}
+	post.Comments = append(post.Comments, *comment)
+
+	filter := bson.D{bson.E{Key: "_id", Value: objectId}}
+	update := bson.D{bson.E{Key: "$set", Value: bson.D{bson.E{Key: "comments", Value: post.Comments}}}}
+	result, err := service.postCollection.UpdateOne(service.c, filter, update)
+	if err != nil {
+		return err
+	}
+
+	if result.MatchedCount != 1 {
+		return errors.New("no matched post found for update")
+	}
+
+	return nil
 }

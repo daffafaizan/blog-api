@@ -30,7 +30,7 @@ func (controller commentController) CreateComment(c *gin.Context) {
 		c.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
 		return
 	}
-	err = controller.service.CreateComment(&comment, &postId)
+	err = controller.service.CreateComment(&postId, &comment)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
