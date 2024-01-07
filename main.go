@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/daffafaizan/blog-api/controllers"
+	"github.com/daffafaizan/blog-api/initializers"
 	"github.com/daffafaizan/blog-api/services"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -27,6 +28,7 @@ var (
 )
 
 func init() {
+	initializers.LoadEnv()
 	c = context.TODO()
 
 	mongoConn := options.Client().ApplyURI("mongodb://localhost:27017")
@@ -61,5 +63,5 @@ func main() {
 		apiRoutes.POST("/posts/:id/comment", commentController.CreateComment)
 	}
 
-	log.Fatal(server.Run("localhost:8080"))
+	log.Fatal(server.Run())
 }
