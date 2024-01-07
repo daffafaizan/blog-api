@@ -1,15 +1,17 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/daffafaizan/blog-api/models"
 	"github.com/daffafaizan/blog-api/services"
 	"github.com/gin-gonic/gin"
 )
 
 type PostController interface {
-	CreatePost(c *gin.Context) error
-	GetAllPosts() []models.Post
-	GetPostById(c *gin.Context) *models.Post
+	CreatePost(c *gin.Context)
+	GetAllPosts(c *gin.Context)
+	GetPostById(c *gin.Context)
 }
 
 type postController struct {
@@ -22,21 +24,36 @@ func NewPostController(service services.PostService) PostController {
 	}
 }
 
-func (controller postController) CreatePost(c *gin.Context) error {
+func (controller postController) CreatePost(c *gin.Context) {
 	var post models.Post
 	err := c.ShouldBindJSON(&post)
 	if err != nil {
-		return err
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
 	}
-	controller.service.CreatePost(post)
-	return nil
+	err = controller.service.CreatePost(&post)
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "success"})
 }
 
-func (controller postController) GetAllPosts() []models.Post {
-	return controller.service.GetAllPosts()
+func (controller postController) GetAllPosts(c *gin.Context) {
+	posts, err := controller.service.GetAllPosts()
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, posts)
 }
 
-func (controller postController) GetPostById(c *gin.Context) *models.Post {
-	id := c.Param("id")
-	return controller.service.GetPostById(id)
+func (controller postController) GetPostById(c *gin.Context) {
+	postId := c.Param("id")
+	post, err := controller.service.GetPostById(&postId)
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, post)
 }
