@@ -62,9 +62,9 @@ func (service *postService) GetAllPosts() ([]*models.Post, error) {
 	return posts, nil
 }
 
-func (service *postService) GetPostById(id *string) (*models.Post, error) {
+func (service *postService) GetPostById(postId *string) (*models.Post, error) {
 	var post *models.Post
-	objectId, err := primitive.ObjectIDFromHex(*id)
+	objectId, err := primitive.ObjectIDFromHex(*postId)
 	if err != nil {
 		return nil, err
 	}
