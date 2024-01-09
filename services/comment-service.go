@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/daffafaizan/blog-api/models"
 	"go.mongodb.org/mongo-driver/bson"
@@ -77,6 +78,7 @@ func (service *commentService) GetAllCommentsByPostId(postId *string) ([]*models
 
 func (service *commentService) CreateComment(postId *string, comment *models.Comment) error {
 	comment.ID = primitive.NewObjectID()
+	comment.CreatedAt = time.Now()
 	_, err := service.commentCollection.InsertOne(service.c, comment)
 	if err != nil {
 		return err
