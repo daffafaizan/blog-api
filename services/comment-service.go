@@ -12,6 +12,7 @@ import (
 
 type CommentService interface {
 	GetCommentById(*string) (*models.Comment, error)
+	GetAllCommentsByPostId(*string) ([]*models.Comment, error)
 	CreateComment(*string, *models.Comment) error
 	DeleteCommentById(*string, *string) error
 }
@@ -38,9 +39,40 @@ func (service *commentService) GetCommentById(commentId *string) (*models.Commen
 	if err != nil {
 		return nil, err
 	}
+
 	filter := bson.D{bson.E{Key: "_id", Value: objectId}}
 	err = service.commentCollection.FindOne(service.c, filter).Decode(&comment)
 	return comment, err
+}
+
+func (service *commentService) GetAllCommentsByPostId(postId *string) ([]*models.Comment, error) {
+	var comments []*models.Comment
+	objectId, err := primitive.ObjectIDFromHex(*postId)
+	if err != nil {
+		return nil, err
+	}
+
+	query := bson.D{bson.E{Key: "postId", Value: objectId}}
+	cursor, err := service.commentCollection.Find(service.c, query)
+	if err != nil {
+		return nil, err
+	}
+	for cursor.Next(service.c) {
+		var comment models.Comment
+		err := cursor.Decode(&comment)
+		if err != nil {
+			return nil, err
+		}
+		comments = append(comments, &comment)
+	}
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+	cursor.Close(service.c)
+	if len(comments) == 0 {
+		return nil, errors.New("posts not found")
+	}
+	return comments, nil
 }
 
 func (service *commentService) CreateComment(postId *string, comment *models.Comment) error {

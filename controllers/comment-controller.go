@@ -10,6 +10,7 @@ import (
 
 type CommentController interface {
 	GetCommentById(c *gin.Context)
+	GetAllCommentsByPostId(c *gin.Context)
 	CreateComment(c *gin.Context)
 	DeleteCommentById(c *gin.Context)
 }
@@ -32,6 +33,15 @@ func (controller commentController) GetCommentById(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, comment)
+}
+
+func (controller commentController) GetAllCommentsByPostId(c *gin.Context) {
+	postId := c.Param("postId")
+	comments, err := controller.service.GetAllCommentsByPostId(&postId)
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
+	}
+	c.JSON(http.StatusOK, comments)
 }
 
 func (controller commentController) CreateComment(c *gin.Context) {
