@@ -9,6 +9,7 @@ type Post struct {
 	Date       string             `json:"date" bson:"date" binding:"required"`
 	Time       string             `json:"time" bson:"time" binding:"required"`
 	PostAuthor Author             `json:"postAuthor" bson:"postAuthor" binding:"required"`
+	Tags       []string           `json:"tags" bson:"tags" binding:"required"`
 	Comments   []Comment          `json:"comments" bson:"comments"`
 	ID         primitive.ObjectID `json:"_id" bson:"_id"`
 }

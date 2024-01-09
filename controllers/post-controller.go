@@ -10,6 +10,7 @@ import (
 
 type PostController interface {
 	CreatePost(c *gin.Context)
+	UpdatePost(c *gin.Context)
 	GetAllPosts(c *gin.Context)
 	GetPostById(c *gin.Context)
 	DeletePostById(c *gin.Context)
@@ -33,6 +34,22 @@ func (controller postController) CreatePost(c *gin.Context) {
 		return
 	}
 	err = controller.service.CreatePost(&post)
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "success"})
+}
+
+func (controller postController) UpdatePost(c *gin.Context) {
+	postId := c.Param("postId")
+	var post models.Post
+	err := c.ShouldBindJSON(&post)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+	err = controller.service.UpdatePost(&postId, &post)
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
 		return
