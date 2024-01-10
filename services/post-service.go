@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -18,6 +19,7 @@ type PostService interface {
 	CreateComment(*string, *models.Comment) error
 	GetAllPosts() ([]*models.Post, error)
 	GetPostById(*string) (*models.Post, error)
+	GetPostBySlug(*string) (*models.Post, error)
 	DeletePostById(*string) error
 }
 
@@ -47,6 +49,7 @@ func GenerateSlug(post *models.Post) {
 
 	// Replace spaces with hyphens
 	post.Slug = strings.ReplaceAll(post.Slug, " ", "-")
+	post.Slug = post.Slug + "-" + fmt.Sprint(strings.ToLower(post.PostAuthor.Name))
 }
 
 func (service *postService) CreatePost(post *models.Post) error {
@@ -105,6 +108,13 @@ func (service *postService) GetPostById(postId *string) (*models.Post, error) {
 	}
 	filter := bson.D{bson.E{Key: "_id", Value: objectId}}
 	err = service.postCollection.FindOne(service.c, filter).Decode(&post)
+	return post, err
+}
+
+func (service *postService) GetPostBySlug(slug *string) (*models.Post, error) {
+	var post *models.Post
+	filter := bson.D{bson.E{Key: "slug", Value: *slug}}
+	err := service.postCollection.FindOne(service.c, filter).Decode(&post)
 	return post, err
 }
 
