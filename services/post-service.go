@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/daffafaizan/blog-api/models"
@@ -34,9 +35,24 @@ func NewPostService(postCollection *mongo.Collection, commentCollection *mongo.C
 	}
 }
 
+func GenerateSlug(post *models.Post) {
+	// Convert title to lowercase
+	post.Slug = strings.ToLower(post.Title)
+
+	// Replace other punctuation marks with empty string
+	punctuation := `!"#$%&'()*+,-./:;<=>?@[\\]^_` + "`{|}~"
+	for _, char := range punctuation {
+		post.Slug = strings.ReplaceAll(post.Slug, string(char), "")
+	}
+
+	// Replace spaces with hyphens
+	post.Slug = strings.ReplaceAll(post.Slug, " ", "-")
+}
+
 func (service *postService) CreatePost(post *models.Post) error {
 	post.ID = primitive.NewObjectID()
 	post.CreatedAt = time.Now()
+	GenerateSlug(post)
 	_, err := service.postCollection.InsertOne(service.c, post)
 	return err
 }
