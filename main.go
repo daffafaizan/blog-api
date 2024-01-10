@@ -66,6 +66,8 @@ func main() {
 		apiRoutes.PATCH("/posts/:postId", postController.UpdatePost)
 		apiRoutes.GET("/posts/:postId", postController.GetPostById)
 		apiRoutes.DELETE("/posts/:postId", postController.DeletePostById)
+		apiRoutes.GET("/posts/:postId/comments/:commentId", commentController.GetCommentById)
+		apiRoutes.GET("/posts/:postId/comments", commentController.GetAllCommentsByPostId)
 		apiRoutes.POST("/posts/:postId/comments", commentController.CreateComment)
 		apiRoutes.DELETE("/posts/:postId/comments/:commentId", commentController.DeleteCommentById)
 	}

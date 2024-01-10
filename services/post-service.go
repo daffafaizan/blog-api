@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/daffafaizan/blog-api/models"
 	"go.mongodb.org/mongo-driver/bson"
@@ -35,6 +36,7 @@ func NewPostService(postCollection *mongo.Collection, commentCollection *mongo.C
 
 func (service *postService) CreatePost(post *models.Post) error {
 	post.ID = primitive.NewObjectID()
+	post.CreatedAt = time.Now()
 	_, err := service.postCollection.InsertOne(service.c, post)
 	return err
 }
