@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/daffafaizan/blog-api/controllers"
-	"github.com/daffafaizan/blog-api/initializers"
 	"github.com/daffafaizan/blog-api/services"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -30,7 +29,6 @@ var (
 )
 
 func init() {
-	initializers.LoadEnv()
 	c = context.TODO()
 
 	mongoConn := options.Client().ApplyURI(os.Getenv("MONGODB"))
