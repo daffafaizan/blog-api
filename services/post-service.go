@@ -99,7 +99,7 @@ func (service *postService) GetAllPosts() ([]*models.Post, error) {
 	}
 	cursor.Close(service.c)
 	if len(posts) == 0 {
-		return nil, errors.New("posts not found")
+		return []*models.Post{}, nil
 	}
 	return posts, nil
 }
