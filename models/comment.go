@@ -11,5 +11,5 @@ type Comment struct {
 	CreatedAt     time.Time          `json:"createdAt" bson:"createdAt"`
 	CommentAuthor string             `json:"commentAuthor" bson:"commentAuthor" binding:"required"`
 	ID            primitive.ObjectID `json:"_id" bson:"_id"`
-	PostId        primitive.ObjectID `json:"postId" bson:"postId" binding:"required"`
+	PostId        primitive.ObjectID `json:"postId" bson:"postId"`
 }

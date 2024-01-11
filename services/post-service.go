@@ -122,30 +122,42 @@ func (service *postService) GetPostById(identifier *string) (*models.Post, error
 	}
 }
 
-func (service *postService) CreateComment(postId *string, comment *models.Comment) error {
-	postObjectId, err := primitive.ObjectIDFromHex(*postId)
-	if err != nil {
-		return err
-	}
-
-	post, err := service.GetPostById(postId)
+func (service *postService) CreateComment(identifier *string, comment *models.Comment) error {
+	post, err := service.GetPostById(identifier)
 	if err != nil {
 		return err
 	}
 	post.Comments = append(post.Comments, *comment)
 
-	filter := bson.D{bson.E{Key: "_id", Value: postObjectId}}
-	update := bson.D{bson.E{Key: "$set", Value: bson.D{bson.E{Key: "comments", Value: post.Comments}}}}
-	result, err := service.postCollection.UpdateOne(service.c, filter, update)
-	if err != nil {
-		return err
-	}
+	if IsValidID(identifier) {
+		objectId, err := primitive.ObjectIDFromHex(*identifier)
+		if err != nil {
+			return err
+		}
+		filter := bson.D{bson.E{Key: "_id", Value: objectId}}
+		update := bson.D{bson.E{Key: "$set", Value: bson.D{bson.E{Key: "comments", Value: post.Comments}}}}
+		result, err := service.postCollection.UpdateOne(service.c, filter, update)
+		if err != nil {
+			return err
+		}
+		if result.MatchedCount != 1 {
+			return errors.New("no matched post found for update")
+		}
 
-	if result.MatchedCount != 1 {
-		return errors.New("no matched post found for update")
-	}
+		return nil
+	} else {
+		filter := bson.D{bson.E{Key: "slug", Value: *identifier}}
+		update := bson.D{bson.E{Key: "$set", Value: bson.D{bson.E{Key: "comments", Value: post.Comments}}}}
+		result, err := service.postCollection.UpdateOne(service.c, filter, update)
+		if err != nil {
+			return err
+		}
+		if result.MatchedCount != 1 {
+			return errors.New("no matched post found for update")
+		}
 
-	return nil
+		return nil
+	}
 }
 
 func (service *postService) DeletePostById(postId *string) error {

@@ -76,15 +76,21 @@ func (service *commentService) GetAllCommentsByPostId(postId *string) ([]*models
 	return comments, nil
 }
 
-func (service *commentService) CreateComment(postId *string, comment *models.Comment) error {
+func (service *commentService) CreateComment(identifier *string, comment *models.Comment) error {
 	comment.ID = primitive.NewObjectID()
+	post, err := service.postService.GetPostById(identifier)
+	if err != nil {
+		return err
+	}
+	comment.PostId = post.ID
 	comment.CreatedAt = time.Now()
-	_, err := service.commentCollection.InsertOne(service.c, comment)
+
+	_, err = service.commentCollection.InsertOne(service.c, comment)
 	if err != nil {
 		return err
 	}
 
-	err = service.postService.CreateComment(postId, comment)
+	err = service.postService.CreateComment(identifier, comment)
 	if err != nil {
 		return err
 	}
