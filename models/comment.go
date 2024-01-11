@@ -9,7 +9,7 @@ import (
 type Comment struct {
 	Content       string             `json:"content" bson:"content" binding:"required,max=300"`
 	CreatedAt     time.Time          `json:"createdAt" bson:"createdAt"`
-	CommentAuthor Author             `json:"commentAuthor" bson:"commentAuthor" binding:"required"`
+	CommentAuthor string             `json:"commentAuthor" bson:"commentAuthor" binding:"required"`
 	ID            primitive.ObjectID `json:"_id" bson:"_id"`
 	PostId        primitive.ObjectID `json:"postId" bson:"postId" binding:"required"`
 }

@@ -13,7 +13,6 @@ type PostController interface {
 	UpdatePost(c *gin.Context)
 	GetAllPosts(c *gin.Context)
 	GetPostById(c *gin.Context)
-	GetPostBySlug(c *gin.Context)
 	DeletePostById(c *gin.Context)
 }
 
@@ -70,16 +69,6 @@ func (controller postController) GetAllPosts(c *gin.Context) {
 func (controller postController) GetPostById(c *gin.Context) {
 	postId := c.Param("postId")
 	post, err := controller.service.GetPostById(&postId)
-	if err != nil {
-		c.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, post)
-}
-
-func (controller postController) GetPostBySlug(c *gin.Context) {
-	slug := c.Param("slug")
-	post, err := controller.service.GetPostBySlug(&slug)
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"message": err.Error()})
 		return

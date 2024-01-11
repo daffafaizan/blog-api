@@ -19,7 +19,6 @@ type PostService interface {
 	CreateComment(*string, *models.Comment) error
 	GetAllPosts() ([]*models.Post, error)
 	GetPostById(*string) (*models.Post, error)
-	GetPostBySlug(*string) (*models.Post, error)
 	DeletePostById(*string) error
 }
 
@@ -50,6 +49,11 @@ func GenerateSlug(post *models.Post) {
 	// Replace spaces with hyphens
 	post.Slug = strings.ReplaceAll(post.Slug, " ", "-")
 	post.Slug = post.Slug + "-" + fmt.Sprint(strings.ToLower(post.PostAuthor.Name))
+}
+
+func IsValidID(id *string) bool {
+	_, err := primitive.ObjectIDFromHex(*id)
+	return err == nil
 }
 
 func (service *postService) CreatePost(post *models.Post) error {
@@ -100,22 +104,22 @@ func (service *postService) GetAllPosts() ([]*models.Post, error) {
 	return posts, nil
 }
 
-func (service *postService) GetPostById(postId *string) (*models.Post, error) {
+func (service *postService) GetPostById(identifier *string) (*models.Post, error) {
 	var post *models.Post
-	objectId, err := primitive.ObjectIDFromHex(*postId)
-	if err != nil {
-		return nil, err
-	}
-	filter := bson.D{bson.E{Key: "_id", Value: objectId}}
-	err = service.postCollection.FindOne(service.c, filter).Decode(&post)
-	return post, err
-}
+	if IsValidID(identifier) {
+		objectId, err := primitive.ObjectIDFromHex(*identifier)
+		if err != nil {
+			return nil, err
+		}
+		filter := bson.D{bson.E{Key: "_id", Value: objectId}}
+		err = service.postCollection.FindOne(service.c, filter).Decode(&post)
+		return post, err
+	} else {
+		filter := bson.D{bson.E{Key: "slug", Value: *identifier}}
+		err := service.postCollection.FindOne(service.c, filter).Decode(&post)
+		return post, err
 
-func (service *postService) GetPostBySlug(slug *string) (*models.Post, error) {
-	var post *models.Post
-	filter := bson.D{bson.E{Key: "slug", Value: *slug}}
-	err := service.postCollection.FindOne(service.c, filter).Decode(&post)
-	return post, err
+	}
 }
 
 func (service *postService) CreateComment(postId *string, comment *models.Comment) error {
