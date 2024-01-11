@@ -72,5 +72,5 @@ func main() {
 		apiRoutes.DELETE("/posts/:postId/comments/:commentId", commentController.DeleteCommentById)
 	}
 
-	log.Fatal(server.Run(os.Getenv("SERVER")))
+	log.Fatal(server.Run())
 }
