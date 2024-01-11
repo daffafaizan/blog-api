@@ -12,7 +12,7 @@ type Post struct {
 	Summary    string             `json:"summary" bson:"summary" binding:"required,max=300"`
 	Content    string             `json:"content" bson:"content" binding:"required"`
 	CreatedAt  time.Time          `json:"createdAt" bson:"createdAt"`
-	PostAuthor Author             `json:"postAuthor" bson:"postAuthor" binding:"required"`
+	PostAuthor string             `json:"postAuthor" bson:"postAuthor" binding:"required"`
 	Tags       []string           `json:"tags" bson:"tags" binding:"required"`
 	Comments   []Comment          `json:"comments" bson:"comments"`
 	ID         primitive.ObjectID `json:"_id" bson:"_id"`

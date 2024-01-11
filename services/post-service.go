@@ -48,7 +48,7 @@ func GenerateSlug(post *models.Post) {
 
 	// Replace spaces with hyphens
 	post.Slug = strings.ReplaceAll(post.Slug, " ", "-")
-	post.Slug = post.Slug + "-" + fmt.Sprint(strings.ToLower(post.PostAuthor.Name))
+	post.Slug = post.Slug + "-" + fmt.Sprint(strings.ToLower(post.PostAuthor))
 }
 
 func IsValidID(id *string) bool {
